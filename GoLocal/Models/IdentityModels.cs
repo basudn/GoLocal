@@ -21,7 +21,6 @@ namespace GoLocal.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<User> UserList { get; set; }
-        public DbSet<Location> LocationList { get; set; }
         public DbSet<Feed> FeedList { get; set; }
         public DbSet<Comment> CommentList { get; set; }
         public DbSet<Vote> VoteList { get; set; }

@@ -9,6 +9,10 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using GoLocal.Models;
+using System.Net.Mail;
+using System.Collections.Generic;
+using GoLocal.Util;
+using System.Web.Security;
 
 namespace GoLocal.Controllers
 {
@@ -22,7 +26,7 @@ namespace GoLocal.Controllers
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -34,9 +38,9 @@ namespace GoLocal.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -120,7 +124,7 @@ namespace GoLocal.Controllers
             // If a user enters incorrect codes for a specified amount of time then the user account 
             // will be locked out for a specified amount of time. 
             // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -155,14 +159,22 @@ namespace GoLocal.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+                    if (User.IsInRole("Admin"))
+                    {
+                        Roles.AddUserToRole(user.Email, "Admin");
+                    }
+                    else
+                    {
+                        await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    }
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
-
+                    
+                    var prop = AppUtil.GetProps();
+                    AppUtil.SendMail(model.Email, prop["wlcSub"], string.Format(prop["wlcBody"], model.Email, "APP_KEY"));
                     return RedirectToAction("Index", "Home");
                 }
                 AddErrors(result);

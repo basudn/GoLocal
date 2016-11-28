@@ -1,0 +1,74 @@
+﻿@model GoLocal.Models.Feed
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Feed</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.User.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Content)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Content)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TimeStamp)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TimeStamp)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LocationName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LocationName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Lat)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Lat)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Long)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Long)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

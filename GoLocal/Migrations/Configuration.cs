@@ -4,6 +4,7 @@ namespace GoLocal.Migrations
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
+    using System.Web.Security;
 
     internal sealed class Configuration : DbMigrationsConfiguration<GoLocal.Models.ApplicationDbContext>
     {
@@ -14,18 +15,23 @@ namespace GoLocal.Migrations
 
         protected override void Seed(GoLocal.Models.ApplicationDbContext context)
         {
-            //  This method will be called after migrating to the latest version.
+            ApplicationUserManager mgr = new ApplicationUserManager(
+    new Microsoft.AspNet.Identity.EntityFramework.UserStore<Models.ApplicationUser>(context));
+            Models.ApplicationUser existingUser = context.Users.FirstOrDefault(x => x.UserName == "admin@abc.com");
+            if (existingUser != null)
+            {
+                Microsoft.AspNet.Identity.UserManagerExtensions.Delete(mgr, existingUser);
+                Roles.RemoveUserFromRole(existingUser.Email, "Admin");
+            }
+            Models.ApplicationUser au = new Models.ApplicationUser { Email = "admin@abc.com", UserName = "admin@abc.com" };
+            var result = mgr.CreateAsync(au, "Welcome@1").Result;
+            if (!Roles.RoleExists("Admin"))
+            {
+                Roles.CreateRole("Admin");
+            }
 
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data. E.g.
-            //
-            //    context.People.AddOrUpdate(
-            //      p => p.FullName,
-            //      new Person { FullName = "Andrew Peters" },
-            //      new Person { FullName = "Brice Lambson" },
-            //      new Person { FullName = "Rowan Miller" }
-            //    );
-            //
+            Roles.AddUserToRole("admin@abc.com", "Admin");
+
         }
     }
 }

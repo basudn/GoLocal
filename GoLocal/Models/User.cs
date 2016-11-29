@@ -15,11 +15,11 @@ namespace GoLocal.Models
         public string Name { get; set; }
         [Display(Name = "Date Of Birth")]
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }
         [StringLength(12)]
-        [RegularExpression("[0-9]{12}")]
+        [Display(Name = "Phone Number")]
+        [RegularExpression("[0-9]{1,12}")]
         public string PhoneNumber { get; set; }
-        [Required]
         [StringLength(1)]
         public string Status { get; set; }
         public virtual List<Feed> MyFeeds { get; set; }

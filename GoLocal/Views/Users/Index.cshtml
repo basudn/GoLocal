@@ -44,7 +44,14 @@
             @Html.DisplayFor(modelItem => item.PhoneNumber)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Status)
+            @if (item.Status == "A")
+            {
+                <span class="badge" style="background-color: #5cb85c;">&nbsp;</span>
+            }
+            else
+            {
+                <span class="badge" style="background-color: #d9534f;">&nbsp;</span>
+            }
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |

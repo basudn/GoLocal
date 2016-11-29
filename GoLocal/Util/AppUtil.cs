@@ -1,7 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Hosting;
 
@@ -15,6 +18,31 @@ namespace GoLocal.Util
             foreach (var row in System.IO.File.ReadAllLines(HostingEnvironment.MapPath(@"~/App_Data/CustomProps.properties")))
                 prop.Add(row.Split('=')[0], string.Join("=", row.Split('=').Skip(1).ToArray()));
             return prop;
+        }
+
+        public static async Task<string> GetMapData(string latLng)
+        {
+            HttpClient client = new HttpClient();
+            string zip = string.Empty;
+            string country = string.Empty;
+            HttpResponseMessage message = await client.GetAsync(new Uri("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latLng + "&key=" + AppUtil.GetProps()["gKey"]));
+            if (message.IsSuccessStatusCode)
+            {
+                string response = await message.Content.ReadAsStringAsync();
+                GMapResponse res = JsonConvert.DeserializeObject<GMapResponse>(response);
+                foreach (AddressComp comp in res.results[0].address_components)
+                {
+                    if (comp.types.Contains("postal_code"))
+                    {
+                        zip = comp.short_name;
+                    }
+                    if (comp.types.Contains("country"))
+                    {
+                        country = comp.short_name;
+                    }
+                }
+            }
+            return country + "-" + zip;
         }
 
         //Satrt Send Email Function

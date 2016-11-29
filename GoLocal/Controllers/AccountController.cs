@@ -159,6 +159,15 @@ namespace GoLocal.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    ApplicationDbContext db = new ApplicationDbContext();
+                    if (db.UserList.Where(u => u.Email.ToLower() == user.Email.ToLower()).Count() == 0)
+                    {
+                        Models.User newUser = new Models.User();
+                        newUser.Email = user.Email;
+                        newUser.Status = "A";
+                        db.UserList.Add(newUser);
+                        await db.SaveChangesAsync();
+                    }
                     if (User.IsInRole("Admin"))
                     {
                         Roles.AddUserToRole(user.Email, "Admin");

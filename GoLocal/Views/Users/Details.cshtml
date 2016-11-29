@@ -51,8 +51,88 @@
         </dd>
 
     </dl>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+
+    @if (Model.MyFeeds.Count > 0)
+    {
+        <h4>My Feeds</h4>
+        <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.MyFeeds[0].Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MyFeeds[0].Timestamp)
+            </th>
+            <th>
+                Upvote
+            </th>
+            <th>
+                Downvote
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.MyFeeds)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Timestamp)
+                </td>
+                <td>
+                    @item.Upvote()
+                </td>
+                <td>
+                    @item.Downvote()
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", "Feeds", new { id = item.ID }, new { }) |
+                    @Html.ActionLink("Details", "Details", "Feeds", new { id = item.ID }, new { }) |
+                    @Html.ActionLink("Delete", "Delete", "Feeds", new { id = item.ID }, new { })
+                </td>
+            </tr>
+        }
+
+    </table>
+    }
+
+    @if (Model.MyComments.Count > 0)
+    {
+        <h4>My Comments</h4>
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.MyComments[0].Feed.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MyComments[0].Timestamp)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model.MyComments)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Feed.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Timestamp)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", "Comments", new { id = item.ID }, new { }) |
+                        @Html.ActionLink("Details", "Details", "Comments", new { id = item.ID }, new { }) |
+                        @Html.ActionLink("Delete", "Delete", "Comments", new { id = item.ID }, new { })
+                    </td>
+                </tr>
+            }
+
+        </table>
+    }
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>

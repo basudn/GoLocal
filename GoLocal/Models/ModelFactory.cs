@@ -13,7 +13,7 @@ namespace GoLocal.Models
             {
                 ID = comment.ID,
                 Content = comment.Content,
-                TimeStamp = comment.TimeStamp,
+                Timestamp = comment.Timestamp,
                 UserId = comment.User.ID,
                 UserName = comment.User.Name,
                 FeedId = comment.Feed.ID,
@@ -28,7 +28,7 @@ namespace GoLocal.Models
                 ID = feed.ID,
                 Title = feed.Title,
                 Content = feed.Content,
-                TimeStamp = feed.TimeStamp,
+                Timestamp = feed.Timestamp,
                 UserID = feed.User.ID,
                 UserName = feed.User.Name,
                 LocationName = feed.LocationName,
@@ -51,7 +51,7 @@ namespace GoLocal.Models
                 FeedID = vote.Feed.ID,
                 FeedTitle = vote.Feed.Title,
                 Type = vote.Type,
-                TimeStamp = vote.TimeStamp
+                Timestamp = vote.Timestamp
             };
         }
 
@@ -76,7 +76,7 @@ namespace GoLocal.Models
             {
                 ID = commentModel.ID,
                 Content = commentModel.Content,
-                TimeStamp = commentModel.TimeStamp,
+                Timestamp = commentModel.Timestamp,
                 UserID = commentModel.UserId,
                 FeedID = commentModel.FeedId
             };
@@ -88,7 +88,7 @@ namespace GoLocal.Models
             {
                 ID = voteModel.ID,
                 UserID = voteModel.UserID,
-                TimeStamp = voteModel.TimeStamp,
+                Timestamp = voteModel.Timestamp,
                 FeedID = voteModel.FeedID,
                 Type = voteModel.Type
             };
@@ -101,7 +101,7 @@ namespace GoLocal.Models
                 ID = feedModel.ID,
                 Title = feedModel.Title,
                 Content = feedModel.Content,
-                TimeStamp = feedModel.TimeStamp,
+                Timestamp = feedModel.Timestamp,
                 UserID = feedModel.UserID,
                 LocationName = feedModel.LocationName,
                 Lat = feedModel.Lat,

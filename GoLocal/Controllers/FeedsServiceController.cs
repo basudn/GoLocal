@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using GoLocal.Models;
+using System.Web.Security;
+using GoLocal.Util;
 
 namespace GoLocal.Controllers
 {
@@ -21,7 +23,32 @@ namespace GoLocal.Controllers
         // GET: api/FeedsService
         public IEnumerable<FeedModel> GetFeedList()
         {
-            return db.FeedList.ToList().Select(f => _modelFactory.Wrap(f));
+            IEnumerable<string> apiKey = Request.Headers.GetValues("apiKey");
+            string api = apiKey.ElementAt(0);
+            var feedList = db.FeedList.Include(f => f.User);
+            string user = api.Split(new char[] { '-' })[1];
+            if (!Roles.GetRolesForUser(user).Contains("Admin"))
+            {
+                feedList = feedList.Where(f => f.Status == "A");
+            }
+            feedList = feedList.OrderByDescending(f => f.Timestamp).Take(25);
+            return feedList.ToList().Select(f => _modelFactory.Wrap(f));
+        }
+
+        // GET: api/FeedsService
+        public async Task<IEnumerable<FeedModel>> GetFeedList(string latLng)
+        {
+            IEnumerable<string> apiKey = Request.Headers.GetValues("apiKey");
+            string api = apiKey.ElementAt(0);
+            var feedList = db.FeedList.Include(f => f.User);
+            string user = api.Split(new char[] { '-' })[1];
+            if (!Roles.GetRolesForUser(user).Contains("Admin"))
+            {
+                feedList = feedList.Where(f => f.Status == "A");
+            }
+            string location = await AppUtil.GetMapData(latLng);
+            feedList = feedList.Where(f => f.LocationName == location).OrderByDescending(f => f.Timestamp);
+            return feedList.ToList().Select(f => _modelFactory.Wrap(f));
         }
 
         // GET: api/FeedsService/5

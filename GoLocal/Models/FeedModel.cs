@@ -8,7 +8,7 @@ namespace GoLocal.Models
         public int ID { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
-        public DateTime TimeStamp { get; set; }
+        public DateTime Timestamp { get; set; }
         public int UserID { get; set; }
         public string UserName { get; set; }
         public string LocationName { get; set; }

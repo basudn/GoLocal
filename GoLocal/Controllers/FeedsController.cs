@@ -8,6 +8,9 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using GoLocal.Models;
+using GoLocal.Util;
+using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace GoLocal.Controllers
 {
@@ -16,10 +19,79 @@ namespace GoLocal.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Feeds
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(string latLng)
         {
             var feedList = db.FeedList.Include(f => f.User);
+            if (!User.IsInRole("Admin"))
+            {
+                feedList = feedList.Where(f => f.Status == "A");
+            }
+            if (!string.IsNullOrEmpty(latLng))
+            {
+                string location = await AppUtil.GetMapData(latLng);
+                feedList = feedList.Where(f => f.LocationName == location).OrderByDescending(f => f.Timestamp);
+            }
+            else
+            {
+                feedList = feedList.OrderByDescending(f => f.Timestamp).Take(25);
+            }
             return View(await feedList.ToListAsync());
+        }
+
+        // GET: Feeds
+        public async Task<ActionResult> Search(string email, string startDate, string endDate, string term, string zipCode)
+        {
+            var feedList = db.FeedList.Include(f => f.User);
+            bool searchCompleted = false;
+            if (!string.IsNullOrWhiteSpace(email))
+            {
+                feedList = feedList.Where(f => f.User.Email.ToLower() == email.ToLower());
+                searchCompleted = true;
+            }
+            if (!string.IsNullOrWhiteSpace(startDate))
+            {
+                try
+                {
+                    DateTime date = DateTime.Parse(startDate);
+                    feedList = feedList.Where(f => f.Timestamp >= date);
+                    searchCompleted = true;
+                }
+                catch (Exception e)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest, e.Message);
+                }
+            }
+            if (!string.IsNullOrWhiteSpace(endDate))
+            {
+                try
+                {
+                    DateTime date = DateTime.Parse(endDate);
+                    feedList = feedList.Where(f => f.Timestamp <= date);
+                    searchCompleted = true;
+                }
+                catch (Exception e)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest, e.Message);
+                }
+            }
+            if (!string.IsNullOrWhiteSpace(term))
+            {
+                feedList = feedList.Where(f => f.Title.ToLower().Contains(term.ToLower()));
+                searchCompleted = true;
+            }
+            if (!string.IsNullOrWhiteSpace(zipCode))
+            {
+                feedList = feedList.Where(f => f.LocationName.ToLower().Contains(zipCode.ToLower()));
+                searchCompleted = true;
+            }
+            if (searchCompleted)
+            {
+                return View(await feedList.ToListAsync());
+            }
+            else
+            {
+                return View(new List<Feed>());
+            }
         }
 
         // GET: Feeds/Details/5
@@ -40,7 +112,6 @@ namespace GoLocal.Controllers
         // GET: Feeds/Create
         public ActionResult Create()
         {
-            ViewBag.UserID = new SelectList(db.UserList, "ID", "Email");
             return View();
         }
 
@@ -51,14 +122,26 @@ namespace GoLocal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "ID,Title,Content,TimeStamp,UserID,LocationName,Lat,Long")] Feed feed)
         {
+            User user = db.UserList.Where(u => u.Email.ToLower() == User.Identity.Name.ToLower()).ToList()[0];
+            if (user.Status == "I")
+            {
+                ModelState.AddModelError("", "User is inactive!");
+            }
+            if (feed.Lat == 0 && feed.Long == 0)
+            {
+                ModelState.AddModelError("", "Please allow location access!");
+            }
             if (ModelState.IsValid)
             {
+                feed.UserID = user.ID;
+                feed.Timestamp = DateTime.Now;
+                feed.LocationName = await AppUtil.GetMapData(feed.Lat + "," + feed.Long);
+                feed.Status = "A";
                 db.FeedList.Add(feed);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.UserID = new SelectList(db.UserList, "ID", "Email", feed.UserID);
             return View(feed);
         }
 
@@ -70,11 +153,10 @@ namespace GoLocal.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Feed feed = await db.FeedList.FindAsync(id);
-            if (feed == null)
+            if (feed == null || feed.User.Email.ToLower() != User.Identity.Name.ToLower())
             {
                 return HttpNotFound();
             }
-            ViewBag.UserID = new SelectList(db.UserList, "ID", "Email", feed.UserID);
             return View(feed);
         }
 
@@ -85,13 +167,18 @@ namespace GoLocal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = "ID,Title,Content,TimeStamp,UserID,LocationName,Lat,Long")] Feed feed)
         {
+            Feed storedFeed = await db.FeedList.FindAsync(feed.ID);
+            if (storedFeed == null || storedFeed.User.Email.ToLower() != User.Identity.Name.ToLower())
+            {
+                return HttpNotFound();
+            }
             if (ModelState.IsValid)
             {
-                db.Entry(feed).State = EntityState.Modified;
+                storedFeed.Title = feed.Title;
+                storedFeed.Content = feed.Content;
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.UserID = new SelectList(db.UserList, "ID", "Email", feed.UserID);
             return View(feed);
         }
 
@@ -103,7 +190,7 @@ namespace GoLocal.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Feed feed = await db.FeedList.FindAsync(id);
-            if (feed == null)
+            if (feed == null || feed.User.Email.ToLower() != User.Identity.Name.ToLower())
             {
                 return HttpNotFound();
             }
@@ -116,7 +203,7 @@ namespace GoLocal.Controllers
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             Feed feed = await db.FeedList.FindAsync(id);
-            db.FeedList.Remove(feed);
+            feed.Status = "I";
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }

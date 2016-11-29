@@ -14,12 +14,12 @@ namespace GoLocal.Models
         [StringLength(1000)]
         [DataType(DataType.MultilineText)]
         public string Content { get; set; }
-        [Required]
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime TimeStamp { get; set; }
+        public DateTime Timestamp { get; set; }
+        [Display(Name = "User ID")]
         public virtual int UserID { get; set; }
         public virtual User User { get; set; }
-        [Required]
+        [Display(Name = "Location Name")]
         [StringLength(100)]
         public string LocationName { get; set; }
         [Required]
@@ -28,7 +28,6 @@ namespace GoLocal.Models
         [Required]
         [Range(-180,180)]
         public double Long { get; set; }
-        [Required]
         [StringLength(1)]
         public string Status { get; set; }
         public virtual List<Comment> FeedComments { get; set; }

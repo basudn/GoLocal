@@ -3,9 +3,30 @@
 @{
     ViewBag.Title = "Index";
 }
-
 <h2>Index</h2>
+<script>
+    window.onload = function getLocation() {
+        navigator.geolocation.getCurrentPosition(show, error);
+        
+        function show(pos) {
+            latitude = pos.coords.latitude;
+            longitude = pos.coords.longitude;
+            document.getElementById('latLng').value = latitude+','+longitude;
+        }
 
+        function error(pos) {
+            alert(pos.code);
+        }
+    }
+</script>
+@using (Html.BeginForm("Index", "Feeds", FormMethod.Post)){
+    @Html.Hidden("latLng");
+    <div class="form-group">
+    <div class="col-md-offset-2 col-md-10">
+        <input type="submit" onclick="getLocation()" value="Use Location" class="btn btn-default" />
+    </div>
+</div>
+}
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
@@ -21,7 +42,7 @@
             @Html.DisplayNameFor(model => model.Content)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.TimeStamp)
+            @Html.DisplayNameFor(model => model.Timestamp)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.LocationName)
@@ -47,7 +68,7 @@
             @Html.DisplayFor(modelItem => item.Content)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.TimeStamp)
+            @Html.DisplayFor(modelItem => item.Timestamp)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.LocationName)

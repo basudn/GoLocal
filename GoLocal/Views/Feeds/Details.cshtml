@@ -35,11 +35,11 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.TimeStamp)
+            @Html.DisplayNameFor(model => model.Timestamp)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.TimeStamp)
+            @Html.DisplayFor(model => model.Timestamp)
         </dd>
 
         <dt>
@@ -66,9 +66,54 @@
             @Html.DisplayFor(model => model.Long)
         </dd>
 
+        <dt>
+            Upvotes
+        </dt>
+
+        <dd>
+            @Model.Upvote()
+        </dd>
+
+        <dt>
+            Downvotes
+        </dt>
+
+        <dd>
+            @Model.Downvote()
+        </dd>
+
     </dl>
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.FeedComments[0].Content)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FeedComments[0].Timestamp)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.FeedComments)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Content)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Timestamp)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+            </td>
+        </tr>
+    }
+
+</table>

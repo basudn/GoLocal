@@ -11,10 +11,12 @@ namespace GoLocal.Models
         public string Content { get; set; }
         [Required]
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime TimeStamp { get; set; }
+        public DateTime Timestamp { get; set; }
+        [Display(Name = "User ID")]
         public virtual int UserID { get; set; }
         public virtual User User { get; set; }
         public virtual Feed Feed { get; set; }
+        [Display(Name = "Feed ID")]
         public virtual int FeedID { get; set; }
     }
 }

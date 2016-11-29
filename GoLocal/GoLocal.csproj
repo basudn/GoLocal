@@ -243,6 +243,12 @@
     <Compile Include="Util\AppUtil.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="1.JPG" />
+    <Content Include="2.png" />
+    <Content Include="3.jpg" />
+    <Content Include="4.jpg" />
+    <Content Include="6.jpg" />
+    <Content Include="7.jpg" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -251,9 +257,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="ApplicationInsights.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
@@ -264,6 +267,8 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="App_Data\CustomProps.properties" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
+    <Content Include="golocal.jpg" />
+    <Content Include="golocalsmall.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />

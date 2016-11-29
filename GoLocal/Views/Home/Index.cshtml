@@ -1,10 +1,10 @@
-﻿@{
+﻿@*@{
     ViewBag.Title = "Home Page";
 }
 
 <div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
+    <img src = "~/golocal.jpg" align ="middle">
+    <p class="lead">GoLocal is the new social news app for you – get the latest news from your neighborhood, area or town. It’s the best way for you and your family to hear what’s happening within your local community. Stay updated about events in your area – whether it is knowing if your local grocer is open, warning people in emergency situations or simply staying updated with the vine..it’s all here with GoLocal!</p>
     <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
 </div>
 
@@ -28,4 +28,128 @@
         <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
         <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
     </div>
+</div>*@
+
+@*@{
+        ViewBag.Title = "Home Page";
+    }
+
+    <div class="jumbotron">
+        <h1>ASP.NET</h1>
+        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
+        <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Getting started</h2>
+            <p>
+                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
+                enables a clean separation of concerns and gives you full control over markup
+                for enjoyable, agile development.
+            </p>
+            <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+            <h2>Get more libraries</h2>
+            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
+            <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+            <h2>Web Hosting</h2>
+            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
+            <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+        </div>
+    </div>*@
+@{
+    ViewBag.Title = "Home Page";
+}
+
+@*<div class="jumbotron">*@
+<div>
+    <img src="~/golocalsmall.png" align="middle" />
+    <h1><font face="Cambria">Welcome To GoLocal!</font></h1>
+
+    <p class="lead">GoLocal is the new social news app for you – get the latest news from your neighborhood, area or town. It’s the best way for you and your family to hear what’s happening within your local community. Stay updated about events in your area – whether it is knowing if your local grocer is open, warning people in emergency situations or simply staying updated with the vine..it’s all here with GoLocal!</p>
+    <p><a href="/Account/Register" class="btn btn-primary btn-lg">Register now! &raquo;</a></p>
 </div>
+<font face="Calibri">
+    <div class="row">
+        <div class="col-md-12">
+            <h2> <center>Why choose the GoLocal application?</center> </h2>
+            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel" width="auto" height="225px" max-height="225px">
+                <!-- Indicators -->
+                <ol class="carousel-indicators">
+                    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+                </ol>
+
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner" max-width="100%" max-height="40%">
+                    <div class="item active">
+                        <center>
+                            @*<img src="http://placehold.it/1200x315" alt="...">*@
+                            <img src="~/4.jpg" alt="GoLocal" max-width="100%" max-height="100%">
+                        </center>
+                        <div class="carousel-caption">
+                            <h3><font color="black">Get the latest local news!</font></h3>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <center>
+                            @*<img src="http://placehold.it/1200x315" alt="...">*@
+                            <img src="~/1.jpg" alt="GoLocal" max-width=300 max-height=300>
+                        </center>
+                        <div class="carousel-caption">
+                            <h3><font color="white">Get updates on crimes and emergencies</font></h3>
+                        </div>
+                    </div>
+                    <div class="item">
+                        @*<img src="http://placehold.it/1200x315" alt="...">*@
+                        <center>
+                            <img src="~/7.jpg" alt="GoLocal" max-width=300 max-height=300>
+                        </center>
+                        <div class="carousel-caption">
+                            <h3><font color="black">Get the latest local deals!</font></h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Get local Updates</h2>
+            <p>
+                Stay up to date on the vine in your area with our app! With your friends on it too, you'll never miss a thing with GoLocal!<br>
+                Say it's holiday season and you want to let your neighbors know where the festivities are..all you have to do is post a message on GoLocal and your friends are in the know! <br> Not feeling like going out? Find out how is outside just by looking at the app! With GoLocal, you can be as lazy as you desire to be!
+            </p>
+            <iframe width="300" height="200" src="https://www.youtube.com/embed/ux43GMHBnRk" frameborder="0" allowfullscreen></iframe>
+            <p><a class="btn btn-default" href="/Help/FinancialResources">See more &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+            <h2>Help the Community</h2>
+            <p>Help your fellow citizens and local law enforcement by reporting local crimes like thefts or break-ins. Often, we only get to know of local crimes through the tele. Getting reporters on the scene and getting police sattements like below are difficult and time consuming. With GoLocal, citizens can directly let others know of imminent danger and help prepare in advance. Help improve public safety with GoLocal!</p>
+            <iframe width="300" height="200" src="https://www.youtube.com/embed/fVpxI4p4QiU" frameborder="0" allowfullscreen></iframe>
+            <p><a class="btn btn-default" href="/Accounts">Start Now! &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+            <h2>Get the best deals</h2>
+            <p>Access the best local deals that are on offer in your neighborhood. And let your neighbors know! Then go grab that deal! <br > If you own a business, post it on GoLocal and let the locals know! They'll surely check it out! Give it a go today! We offer excellent offers to list your business with us. Don't miss out!</p>
+            <iframe width="300" height="200" src="https://www.youtube.com/embed/oSiEV6gaVb4" frameborder="0" allowfullscreen></iframe>
+            <p><a class="btn btn-default" href="/Wishlists">Learn more &raquo;</a></p>
+        </div>
+
+    </div>
+    <div class="container body-content">
+
+        <hr />
+        <footer>
+            <p> <b>About Us:</b> <br> We are a startup based out of Cincinnati, OH hoping to cater to your need to keep track of your neighborhood news, community events and local activities</p>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d773.5796899059388!2d-84.5169909707754!3d39.14473099872082!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8841b38402148c6f%3A0x917239de46a8eb5e!2s222+Senator+Pl%2C+Cincinnati%2C+OH+45220!5e0!3m2!1sen!2sus!4v1475955569207" width="1200" height="250" frameborder="0" style="border:0" allowfullscreen></iframe>
+            <p>&copy; @DateTime.Now.Year - Debayan Basu, Sushant Karnik, Vijay Jain</p>
+        </footer>
+    </div>
+
+</font>

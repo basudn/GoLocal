@@ -42,9 +42,18 @@ namespace GoLocal.Controllers
         }
 
         // GET: Comments/Create
-        public ActionResult Create()
+        public ActionResult Create(int? feedId)
         {
-            ViewBag.FeedID = new SelectList(db.FeedList, "ID", "Title");
+            List<Feed> list;
+            if (feedId == null)
+            {
+                list = db.FeedList.ToList();
+            }
+            else
+            {
+                list = db.FeedList.Where(f => f.ID == feedId).ToList();
+            }
+            ViewBag.FeedID = new SelectList(list, "ID", "Title");
             return View();
         }
 
@@ -61,7 +70,7 @@ namespace GoLocal.Controllers
                 ModelState.AddModelError("", "User is inactive!");
             }
             Feed feed = await db.FeedList.FindAsync(comment.FeedID);
-            if(feed == null || feed.Status == "A")
+            if(feed == null || feed.Status != "A")
             {
                 ModelState.AddModelError("", "Feed is inactive!");
             }

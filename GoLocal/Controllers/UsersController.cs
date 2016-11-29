@@ -17,11 +17,12 @@ namespace GoLocal.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Users
+        [Authorize]
         public async Task<ActionResult> Index(int page = 0)
         {
             if (User.IsInRole("Admin"))
             {
-                int pageSize = 5; // you can always do something more elegant to set this
+                int pageSize = 5;
                 int count = db.UserList.Count();
                 List<User> users = await db.UserList.OrderBy(u => u.ID).Skip(page * pageSize).Take(pageSize).ToListAsync();
                 this.ViewBag.MaxPage = (count / pageSize) - (count % pageSize == 0 ? 1 : 0);
@@ -37,6 +38,7 @@ namespace GoLocal.Controllers
         }
 
         // GET: Users/Details/5
+        [Authorize]
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
@@ -52,6 +54,7 @@ namespace GoLocal.Controllers
         }
 
         // GET: Users/Create
+        [Authorize]
         public async Task<ActionResult> Create()
         {
             if (User.IsInRole("Admin"))
@@ -87,6 +90,7 @@ namespace GoLocal.Controllers
         }
 
         // GET: Users/Edit/5
+        [Authorize]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -102,6 +106,7 @@ namespace GoLocal.Controllers
         }
 
         // GET: Users/Edit/5
+        [Authorize]
         public ActionResult EditProfile()
         {
             User user = db.UserList.Where(u => u.Email.ToLower() == User.Identity.Name.ToLower()).ToList()[0];
@@ -113,6 +118,7 @@ namespace GoLocal.Controllers
         }
 
         // GET: Users/Edit/5
+        [Authorize]
         public ActionResult GetKey()
         {
             User user = db.UserList.Where(u => u.Email.ToLower() == User.Identity.Name.ToLower()).ToList()[0];
@@ -130,6 +136,7 @@ namespace GoLocal.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<ActionResult> Edit([Bind(Include = "ID,Email,Name,DateOfBirth,PhoneNumber,Status")] User user)
         {
             User storedUser = await db.UserList.FindAsync(user.ID);
@@ -149,6 +156,7 @@ namespace GoLocal.Controllers
         }
 
         // GET: Users/Delete/5
+        [Authorize]
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)

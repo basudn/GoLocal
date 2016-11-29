@@ -5,13 +5,38 @@
 }
 <h2>Index</h2>
 <script>
+    function mapData() {
+        var latLong = document.getElementById('latLng').value;
+        initMap(latLong.split(",")[0], latLong.split(",")[1]);
+    }
+    function initMap(latitude, longitude) {
+        document.getElementById('latLng').value = latitude + "," + longitude;
+        var current = { lat: latitude, lng: longitude };
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 14,
+            center: current,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            mapTypeControl: false
+        });
+
+        var marker = new google.maps.Marker({
+            position: current,
+            map: map,
+            draggable: true,
+            animation: google.maps.Animation.DROP
+        });
+
+        google.maps.event.addListener(marker, 'dragend', function () {
+            initMap(marker.getPosition().lat(), marker.getPosition().lng());
+        });
+    }
     window.onload = function getLocation() {
         navigator.geolocation.getCurrentPosition(show, error);
-        
+
         function show(pos) {
-            latitude = pos.coords.latitude;
-            longitude = pos.coords.longitude;
-            document.getElementById('latLng').value = latitude+','+longitude;
+            latLong = pos.coords.latitude + ',' + pos.coords.longitude;
+            document.getElementById('latLng').value = latLong;
+            initMap(pos.coords.latitude, pos.coords.longitude);
         }
 
         function error(pos) {
@@ -19,72 +44,90 @@
         }
     }
 </script>
-@using (Html.BeginForm("Index", "Feeds", FormMethod.Post)){
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDjDgaLxa1M1Xz5pjaBUUpv1CTc-9Tq3CQ&callback=initMap"></script>
+@using (Html.BeginForm("Index", "Feeds", FormMethod.Post))
+{
     @Html.Hidden("latLng");
     <div class="form-group">
-    <div class="col-md-offset-2 col-md-10">
-        <input type="submit" onclick="getLocation()" value="Use Location" class="btn btn-default" />
+        <div class="row">
+            <div class="col-md-6">
+                <div id="map" style="height: 200px; width: 300px;"></div>
+                <input type="submit" onclick="mapData()" value="Use Location" class="btn btn-default" />
+                <input type="submit" onclick="getLocation()" value="Current Location" class="btn btn-default" />
+            </div>
+            <div class="col-md-6" style="vertical-align:middle;">
+                Weather:<br />
+                @Html.Raw(ViewBag.weather)
+            </div>
+        </div>
     </div>
-</div>
 }
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "Create") | 
+    @Html.ActionLink("Search", "Search")
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.User.Email)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Content)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Timestamp)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.LocationName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Lat)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Long)
-        </th>
-        <th></th>
-    </tr>
+@if (Model.Count() > 0)
+{
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.User.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Content)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Timestamp)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LocationName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Lat)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Long)
+            </th>
+            <th></th>
+        </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.User.Email)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Content)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Timestamp)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.LocationName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Lat)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Long)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
-        </td>
-    </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Content)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Timestamp)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LocationName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Lat)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Long)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "Details", new { id = item.ID })
+                    @if (item.User.Email == User.Identity.Name || User.IsInRole("Admin"))
+                    {
+                        <span>|</span> @Html.ActionLink("Edit", "Edit", new { id = item.ID }) <span>|</span>
+                        @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                    }
+                </td>
+            </tr>
+        }
+
+    </table>
 }
-
-</table>

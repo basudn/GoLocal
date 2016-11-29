@@ -38,10 +38,18 @@ namespace GoLocal.Controllers
         }
 
         // GET: Votes/Create
-        public ActionResult Create()
+        public ActionResult Create(int? feedId)
         {
-            ViewBag.FeedID = new SelectList(db.FeedList, "ID", "Title");
-            ViewBag.UserID = new SelectList(db.UserList, "ID", "Email");
+            List<Feed> list;
+            if (feedId == null)
+            {
+                list = db.FeedList.ToList();
+            }
+            else
+            {
+                list = db.FeedList.Where(f => f.ID == feedId).ToList();
+            }
+            ViewBag.FeedID = new SelectList(list, "ID", "Title");
             return View();
         }
 
@@ -52,50 +60,31 @@ namespace GoLocal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "ID,UserID,Type,FeedID,TimeStamp")] Vote vote)
         {
+            User user = db.UserList.Where(u => u.Email.ToLower() == User.Identity.Name.ToLower()).ToList()[0];
+            if (user.Status == "I")
+            {
+                ModelState.AddModelError("", "User is inactive!");
+            }
+            Feed feed = await db.FeedList.FindAsync(vote.FeedID);
+            if (feed == null || feed.Status != "A")
+            {
+                ModelState.AddModelError("", "Feed is inactive!");
+            }
+            int count = db.VoteList.Where(v => v.Feed.ID == vote.FeedID && v.User.Email.ToLower() == User.Identity.Name.ToLower()).Count();
+            if(count > 0)
+            {
+                ModelState.AddModelError("", "User has already voted!");
+            }
             if (ModelState.IsValid)
             {
+                vote.Timestamp = DateTime.Now;
+                vote.UserID = user.ID;
                 db.VoteList.Add(vote);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
             ViewBag.FeedID = new SelectList(db.FeedList, "ID", "Title", vote.FeedID);
-            ViewBag.UserID = new SelectList(db.UserList, "ID", "Email", vote.UserID);
-            return View(vote);
-        }
-
-        // GET: Votes/Edit/5
-        public async Task<ActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Vote vote = await db.VoteList.FindAsync(id);
-            if (vote == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.FeedID = new SelectList(db.FeedList, "ID", "Title", vote.FeedID);
-            ViewBag.UserID = new SelectList(db.UserList, "ID", "Email", vote.UserID);
-            return View(vote);
-        }
-
-        // POST: Votes/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "ID,UserID,Type,FeedID,TimeStamp")] Vote vote)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(vote).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
-            ViewBag.FeedID = new SelectList(db.FeedList, "ID", "Title", vote.FeedID);
-            ViewBag.UserID = new SelectList(db.UserList, "ID", "Email", vote.UserID);
             return View(vote);
         }
 
@@ -107,7 +96,7 @@ namespace GoLocal.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Vote vote = await db.VoteList.FindAsync(id);
-            if (vote == null)
+            if (vote == null || vote.User.Email.ToLower() != User.Identity.Name.ToLower())
             {
                 return HttpNotFound();
             }
@@ -120,6 +109,10 @@ namespace GoLocal.Controllers
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             Vote vote = await db.VoteList.FindAsync(id);
+            if(vote == null || vote.User.Email.ToLower() != User.Identity.Name.ToLower())
+            {
+                return HttpNotFound();
+            }
             db.VoteList.Remove(vote);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");

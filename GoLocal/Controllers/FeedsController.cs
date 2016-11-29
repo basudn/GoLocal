@@ -29,17 +29,18 @@ namespace GoLocal.Controllers
             if (!string.IsNullOrEmpty(latLng))
             {
                 string location = await AppUtil.GetMapData(latLng);
-                feedList = feedList.Where(f => f.LocationName == location).OrderByDescending(f => f.Timestamp);
+                ViewBag.weather = await AppUtil.GetWeatherData(latLng);
+                feedList = feedList.Where(f => f.LocationName == location).OrderByDescending(f => f.Timestamp).Take(10);
             }
             else
             {
-                feedList = feedList.OrderByDescending(f => f.Timestamp).Take(25);
+                feedList = feedList.OrderByDescending(f => f.Timestamp).Take(10);
             }
             return View(await feedList.ToListAsync());
         }
 
         // GET: Feeds
-        public async Task<ActionResult> Search(string email, string startDate, string endDate, string term, string zipCode)
+        public async Task<ActionResult> Search(string email, string startDate, string endDate, string term, string zipCode, int page = 0)
         {
             var feedList = db.FeedList.Include(f => f.User);
             bool searchCompleted = false;
@@ -86,7 +87,13 @@ namespace GoLocal.Controllers
             }
             if (searchCompleted)
             {
-                return View(await feedList.ToListAsync());
+                int pageSize = 5;
+                int count = feedList.Count();
+                List<Feed> feeds = await feedList.OrderByDescending(f => f.Timestamp).Skip(pageSize * page).Take(pageSize).ToListAsync();
+                ViewBag.SearchParams = string.Join(",",email,startDate,endDate,term,zipCode);
+                this.ViewBag.MaxPage = (count / pageSize) - (count % pageSize == 0 ? 1 : 0);
+                this.ViewBag.Page = page;
+                return View(feeds);
             }
             else
             {

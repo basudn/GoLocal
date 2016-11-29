@@ -45,6 +45,20 @@ namespace GoLocal.Util
             return country + "-" + zip;
         }
 
+        public static async Task<string> GetWeatherData(string latLng)
+        {
+            HttpClient client = new HttpClient();
+            string weather = string.Empty;
+            HttpResponseMessage message = await client.GetAsync(new Uri("https://api.darksky.net/forecast/" + AppUtil.GetProps()["wthrKey"] + "/" + latLng));
+            if (message.IsSuccessStatusCode)
+            {
+                string response = await message.Content.ReadAsStringAsync();
+                WeatherResponse res = JsonConvert.DeserializeObject<WeatherResponse>(response);
+                weather = string.Join("<br/>", res.currently.summary, res.currently.temperature+"F", res.currently.humidity, res.daily.summary);
+            }
+            return weather;
+        }
+
         //Satrt Send Email Function
         public static string SendMail(string toList, string subject, string body)
         {

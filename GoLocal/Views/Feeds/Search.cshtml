@@ -116,4 +116,20 @@
         }
 
     </table>
+    if (ViewBag.Page > 0)
+    {
+        string[] filters = ViewBag.SearchParams.Split(',');
+        <a href="@Url.Action("Search", new { page = ViewBag.Page - 1, email = filters[0], startDate = filters[1], endDate = filters[2], term = filters[3], zipCode = filters[4] })"
+           class="btn btn-default">
+            &laquo; Prev
+        </a>
+    }
+    if (ViewBag.Page < ViewBag.MaxPage)
+    {
+        string[] filters = ViewBag.SearchParams.Split(',');
+        <a href="@Url.Action("Search", new { page = ViewBag.Page + 1, email = filters[0], startDate = filters[1], endDate = filters[2], term = filters[3], zipCode = filters[4] })"
+           class="btn btn-default">
+            Next &raquo;
+        </a>
+    }
 }

@@ -221,9 +221,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201611251607377_ApplicationDbContext.cs" />
-    <Compile Include="Migrations\201611251607377_ApplicationDbContext.Designer.cs">
-      <DependentUpon>201611251607377_ApplicationDbContext.cs</DependentUpon>
+    <Compile Include="Migrations\201611291500146_ApplicationDbContext.cs" />
+    <Compile Include="Migrations\201611291500146_ApplicationDbContext.Designer.cs">
+      <DependentUpon>201611291500146_ApplicationDbContext.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -361,8 +361,8 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201611251607377_ApplicationDbContext.resx">
-      <DependentUpon>201611251607377_ApplicationDbContext.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201611291500146_ApplicationDbContext.resx">
+      <DependentUpon>201611291500146_ApplicationDbContext.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

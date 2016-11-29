@@ -110,6 +110,7 @@ namespace GoLocal.Controllers
         }
 
         // GET: Feeds/Create
+        [Authorize]
         public ActionResult Create()
         {
             return View();
@@ -120,6 +121,7 @@ namespace GoLocal.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<ActionResult> Create([Bind(Include = "ID,Title,Content,TimeStamp,UserID,LocationName,Lat,Long")] Feed feed)
         {
             User user = db.UserList.Where(u => u.Email.ToLower() == User.Identity.Name.ToLower()).ToList()[0];
@@ -146,6 +148,7 @@ namespace GoLocal.Controllers
         }
 
         // GET: Feeds/Edit/5
+        [Authorize]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -165,6 +168,7 @@ namespace GoLocal.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<ActionResult> Edit([Bind(Include = "ID,Title,Content,TimeStamp,UserID,LocationName,Lat,Long")] Feed feed)
         {
             Feed storedFeed = await db.FeedList.FindAsync(feed.ID);
@@ -183,6 +187,7 @@ namespace GoLocal.Controllers
         }
 
         // GET: Feeds/Delete/5
+        [Authorize]
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
@@ -200,6 +205,7 @@ namespace GoLocal.Controllers
         // POST: Feeds/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             Feed feed = await db.FeedList.FindAsync(id);

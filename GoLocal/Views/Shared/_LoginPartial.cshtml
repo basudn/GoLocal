@@ -9,6 +9,8 @@
         <li>
             @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
         </li>
+        <li>@Html.ActionLink("Profile", "EditProfile", "Users", routeValues: null, htmlAttributes: null)</li>
+        <li>@Html.ActionLink("Get Key", "GetKey", "Users", routeValues: null, htmlAttributes: null)</li>
         @if (User.IsInRole("Admin"))
         {
             <li>@Html.ActionLink("New Admin", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>

@@ -12,8 +12,8 @@ namespace GoLocal.Migrations
                 c => new
                     {
                         ID = c.Int(nullable: false, identity: true),
-                        Content = c.String(),
-                        TimeStamp = c.DateTime(nullable: false),
+                        Content = c.String(maxLength: 1000),
+                        Timestamp = c.DateTime(nullable: false),
                         UserID = c.Int(nullable: false),
                         FeedID = c.Int(nullable: false),
                     })
@@ -28,19 +28,18 @@ namespace GoLocal.Migrations
                 c => new
                     {
                         ID = c.Int(nullable: false, identity: true),
-                        Title = c.String(),
-                        Content = c.String(),
-                        TimeStamp = c.DateTime(nullable: false),
+                        Title = c.String(nullable: false, maxLength: 100),
+                        Content = c.String(nullable: false, maxLength: 1000),
+                        Timestamp = c.DateTime(nullable: false),
                         UserID = c.Int(nullable: false),
-                        LocationID = c.Int(nullable: false),
-                        UpVote = c.Int(nullable: false),
-                        DownVote = c.Int(nullable: false),
+                        LocationName = c.String(maxLength: 100),
+                        Lat = c.Double(nullable: false),
+                        Long = c.Double(nullable: false),
+                        Status = c.String(maxLength: 1),
                     })
                 .PrimaryKey(t => t.ID)
                 .ForeignKey("dbo.Users", t => t.UserID, cascadeDelete: false)
-                .ForeignKey("dbo.Locations", t => t.LocationID, cascadeDelete: true)
-                .Index(t => t.UserID)
-                .Index(t => t.LocationID);
+                .Index(t => t.UserID);
             
             CreateTable(
                 "dbo.Votes",
@@ -48,9 +47,9 @@ namespace GoLocal.Migrations
                     {
                         ID = c.Int(nullable: false, identity: true),
                         UserID = c.Int(nullable: false),
-                        type = c.String(),
+                        Type = c.String(nullable: false, maxLength: 1),
                         FeedID = c.Int(nullable: false),
-                        TimeStamp = c.DateTime(nullable: false),
+                        Timestamp = c.DateTime(nullable: false),
                     })
                 .PrimaryKey(t => t.ID)
                 .ForeignKey("dbo.Feeds", t => t.FeedID, cascadeDelete: true)
@@ -63,22 +62,11 @@ namespace GoLocal.Migrations
                 c => new
                     {
                         ID = c.Int(nullable: false, identity: true),
-                        Email = c.String(),
-                        Name = c.String(),
-                        Age = c.String(),
-                        City = c.String(),
-                        PhoneNumber = c.String(),
-                    })
-                .PrimaryKey(t => t.ID);
-            
-            CreateTable(
-                "dbo.Locations",
-                c => new
-                    {
-                        ID = c.Int(nullable: false, identity: true),
-                        Name = c.String(),
-                        Lat = c.Double(nullable: false),
-                        Long = c.Double(nullable: false),
+                        Email = c.String(nullable: false, maxLength: 50),
+                        Name = c.String(maxLength: 100),
+                        DateOfBirth = c.DateTime(),
+                        PhoneNumber = c.String(maxLength: 12),
+                        Status = c.String(maxLength: 1),
                     })
                 .PrimaryKey(t => t.ID);
             
@@ -158,7 +146,6 @@ namespace GoLocal.Migrations
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
-            DropForeignKey("dbo.Feeds", "LocationID", "dbo.Locations");
             DropForeignKey("dbo.Votes", "UserID", "dbo.Users");
             DropForeignKey("dbo.Feeds", "UserID", "dbo.Users");
             DropForeignKey("dbo.Comments", "UserID", "dbo.Users");
@@ -172,7 +159,6 @@ namespace GoLocal.Migrations
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
             DropIndex("dbo.Votes", new[] { "FeedID" });
             DropIndex("dbo.Votes", new[] { "UserID" });
-            DropIndex("dbo.Feeds", new[] { "LocationID" });
             DropIndex("dbo.Feeds", new[] { "UserID" });
             DropIndex("dbo.Comments", new[] { "FeedID" });
             DropIndex("dbo.Comments", new[] { "UserID" });
@@ -181,7 +167,6 @@ namespace GoLocal.Migrations
             DropTable("dbo.AspNetUsers");
             DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.AspNetRoles");
-            DropTable("dbo.Locations");
             DropTable("dbo.Users");
             DropTable("dbo.Votes");
             DropTable("dbo.Feeds");

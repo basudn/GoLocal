@@ -29,13 +29,15 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Go Local", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact Us", "Contact", "Home")</li>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li>@Html.ActionLink("Users", "Index", "Users")</li>
+                    }
+                    <li>@Html.ActionLink("Feeds", "Index", "Feeds")</li>
                     <li>@Html.ActionLink("Twitter", "ComingSoon", "Home")</li>
                     <li>@Html.ActionLink("Local Map", "ComingSoon", "Home")</li>
                     <li>@Html.ActionLink("Jobs", "Contact", "Home")</li>

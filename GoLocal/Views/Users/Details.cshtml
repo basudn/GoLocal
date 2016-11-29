@@ -35,6 +35,14 @@
         </dd>
 
         <dt>
+            @Html.DisplayNameFor(model => model.RegDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RegDate)
+        </dd>
+
+        <dt>
             @Html.DisplayNameFor(model => model.PhoneNumber)
         </dt>
 
@@ -58,7 +66,7 @@
 
     @if (Model.MyFeeds.Count > 0)
     {
-        <h4>My Feeds</h4>
+        <h4>My Recent Feeds</h4>
         <table class="table">
         <tr>
             <th>
@@ -76,7 +84,7 @@
             <th></th>
         </tr>
 
-        @foreach (var item in Model.MyFeeds)
+        @foreach (var item in Model.MyFeeds.Take(5))
         {
             <tr>
                 <td>
@@ -104,7 +112,7 @@
 
     @if (Model.MyComments.Count > 0)
     {
-        <h4>My Comments</h4>
+        <h4>My Recent Comments</h4>
         <table class="table">
             <tr>
                 <th>
@@ -116,7 +124,7 @@
                 <th></th>
             </tr>
 
-            @foreach (var item in Model.MyComments)
+            @foreach (var item in Model.MyComments.Take(5))
             {
                 <tr>
                     <td>
@@ -129,6 +137,40 @@
                         @Html.ActionLink("Edit", "Edit", "Comments", new { id = item.ID }, new { }) |
                         @Html.ActionLink("Details", "Details", "Comments", new { id = item.ID }, new { }) |
                         @Html.ActionLink("Delete", "Delete", "Comments", new { id = item.ID }, new { })
+                    </td>
+                </tr>
+            }
+
+        </table>
+    }
+
+    @if (Model.MyVotes.Count > 0)
+    {
+        <h4>My Recent Comments</h4>
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.MyVotes[0].Feed.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MyVotes[0].Timestamp)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model.MyVotes.Take(5))
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Feed.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Timestamp)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", "Votes", new { id = item.ID }, new { }) |
+                        @Html.ActionLink("Details", "Details", "Votes", new { id = item.ID }, new { }) |
+                        @Html.ActionLink("Delete", "Delete", "Votes", new { id = item.ID }, new { })
                     </td>
                 </tr>
             }

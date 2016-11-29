@@ -183,7 +183,7 @@ namespace GoLocal.Controllers
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
                     
                     var prop = AppUtil.GetProps();
-                    AppUtil.SendMail(model.Email, prop["wlcSub"], string.Format(prop["wlcBody"], model.Email, "APP_KEY"));
+                    AppUtil.SendMail(model.Email, prop["wlcSub"], string.Format(prop["wlcBody"], model.Email, model.Email));
                     return RedirectToAction("Index", "Home");
                 }
                 AddErrors(result);

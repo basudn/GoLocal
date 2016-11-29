@@ -19,6 +19,10 @@ namespace GoLocal.Controllers
         public async Task<ActionResult> Index()
         {
             var commentList = db.CommentList.Include(c => c.Feed).Include(c => c.User);
+            if (!User.IsInRole("Admin"))
+            {
+                commentList = commentList.Where(c => c.Feed.Status == "A");
+            }
             return View(await commentList.ToListAsync());
         }
 
@@ -41,7 +45,6 @@ namespace GoLocal.Controllers
         public ActionResult Create()
         {
             ViewBag.FeedID = new SelectList(db.FeedList, "ID", "Title");
-            ViewBag.UserID = new SelectList(db.UserList, "ID", "Email");
             return View();
         }
 
@@ -52,15 +55,26 @@ namespace GoLocal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "ID,Content,TimeStamp,UserID,FeedID")] Comment comment)
         {
+            User user = db.UserList.Where(u => u.Email.ToLower() == User.Identity.Name.ToLower()).ToList()[0];
+            if (user.Status == "I")
+            {
+                ModelState.AddModelError("", "User is inactive!");
+            }
+            Feed feed = await db.FeedList.FindAsync(comment.FeedID);
+            if(feed == null || feed.Status == "A")
+            {
+                ModelState.AddModelError("", "Feed is inactive!");
+            }
             if (ModelState.IsValid)
             {
+                comment.UserID = user.ID;
+                comment.Timestamp = DateTime.Now;
                 db.CommentList.Add(comment);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
             ViewBag.FeedID = new SelectList(db.FeedList, "ID", "Title", comment.FeedID);
-            ViewBag.UserID = new SelectList(db.UserList, "ID", "Email", comment.UserID);
             return View(comment);
         }
 
@@ -72,12 +86,11 @@ namespace GoLocal.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Comment comment = await db.CommentList.FindAsync(id);
-            if (comment == null)
+            if (comment == null || comment.User.Email.ToLower() != User.Identity.Name.ToLower())
             {
                 return HttpNotFound();
             }
             ViewBag.FeedID = new SelectList(db.FeedList, "ID", "Title", comment.FeedID);
-            ViewBag.UserID = new SelectList(db.UserList, "ID", "Email", comment.UserID);
             return View(comment);
         }
 
@@ -88,14 +101,18 @@ namespace GoLocal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = "ID,Content,TimeStamp,UserID,FeedID")] Comment comment)
         {
+            Comment storedComment = await db.CommentList.FindAsync(comment.ID);
+            if(storedComment == null || storedComment.User.Email.ToLower() != User.Identity.Name.ToLower())
+            {
+                return HttpNotFound();
+            }
             if (ModelState.IsValid)
             {
-                db.Entry(comment).State = EntityState.Modified;
+                storedComment.Content = comment.Content;
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             ViewBag.FeedID = new SelectList(db.FeedList, "ID", "Title", comment.FeedID);
-            ViewBag.UserID = new SelectList(db.UserList, "ID", "Email", comment.UserID);
             return View(comment);
         }
 
@@ -107,7 +124,7 @@ namespace GoLocal.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Comment comment = await db.CommentList.FindAsync(id);
-            if (comment == null)
+            if (comment == null || comment.User.Email.ToLower() != User.Identity.Name.ToLower())
             {
                 return HttpNotFound();
             }

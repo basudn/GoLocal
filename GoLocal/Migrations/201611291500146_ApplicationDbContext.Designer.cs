@@ -13,7 +13,7 @@ namespace GoLocal.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201611251607377_ApplicationDbContext"; }
+            get { return "201611291500146_ApplicationDbContext"; }
         }
         
         string IMigrationMetadata.Source

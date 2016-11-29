@@ -8,6 +8,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using GoLocal.Models;
+using GoLocal.Util;
 
 namespace GoLocal.Controllers
 {
@@ -16,11 +17,16 @@ namespace GoLocal.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Users
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int page = 0)
         {
             if (User.IsInRole("Admin"))
             {
-                return View(await db.UserList.ToListAsync());
+                int pageSize = 5; // you can always do something more elegant to set this
+                int count = db.UserList.Count();
+                List<User> users = await db.UserList.OrderBy(u => u.ID).Skip(page * pageSize).Take(pageSize).ToListAsync();
+                this.ViewBag.MaxPage = (count / pageSize) - (count % pageSize == 0 ? 1 : 0);
+                this.ViewBag.Page = page;
+                return View(users);
             }
             else
             {
@@ -70,6 +76,7 @@ namespace GoLocal.Controllers
         {
             if (ModelState.IsValid)
             {
+                user.RegDate = DateTime.Now;
                 user.Status = "A";
                 db.UserList.Add(user);
                 await db.SaveChangesAsync();
@@ -85,13 +92,37 @@ namespace GoLocal.Controllers
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            } 
             User user = await db.UserList.FindAsync(id);
             if (user == null || (!User.IsInRole("Admin") && user.Email.ToLower() != User.Identity.Name.ToLower()))
             {
                 return HttpNotFound();
             }
             return View(user);
+        }
+
+        // GET: Users/Edit/5
+        public ActionResult EditProfile()
+        {
+            User user = db.UserList.Where(u => u.Email.ToLower() == User.Identity.Name.ToLower()).ToList()[0];
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            return RedirectToAction("Edit", routeValues: new { id = user.ID });
+        }
+
+        // GET: Users/Edit/5
+        public ActionResult GetKey()
+        {
+            User user = db.UserList.Where(u => u.Email.ToLower() == User.Identity.Name.ToLower()).ToList()[0];
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            var prop = AppUtil.GetProps();
+            AppUtil.SendMail(user.Email, prop["keySub"], string.Format(prop["keyBody"], (user.Name == null ? user.Email : user.Name), user.Email));
+            return RedirectToAction("Index", "Home");
         }
 
         // POST: Users/Edit/5

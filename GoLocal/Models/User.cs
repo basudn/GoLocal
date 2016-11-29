@@ -13,6 +13,9 @@ namespace GoLocal.Models
         public string Email { get; set; }
         [StringLength(100)]
         public string Name { get; set; }
+        [Display(Name = "Registration Date")]
+        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy hh:mm tt}", ApplyFormatInEditMode = true)]
+        public DateTime? RegDate { get; set; }
         [Display(Name = "Date Of Birth")]
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? DateOfBirth { get; set; }

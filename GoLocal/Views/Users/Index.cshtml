@@ -4,11 +4,8 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h4>Users</h4>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 <table class="table">
     <tr>
         <th>
@@ -19,6 +16,9 @@
         </th>
         <th>
             @Html.DisplayNameFor(model => model.DateOfBirth)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RegDate)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.PhoneNumber)
@@ -41,6 +41,9 @@
             @Html.DisplayFor(modelItem => item.DateOfBirth)
         </td>
         <td>
+            @Html.DisplayFor(modelItem => item.RegDate)
+        </td>
+        <td>
             @Html.DisplayFor(modelItem => item.PhoneNumber)
         </td>
         <td>
@@ -60,5 +63,18 @@
         </td>
     </tr>
 }
-
+@if (ViewBag.Page > 0)
+{
+    <a href="@Url.Action("Index", new { page = ViewBag.Page - 1 })"
+       class="btn btn-default">
+        &laquo; Prev
+    </a>
+}
+@if (ViewBag.Page < ViewBag.MaxPage)
+{
+    <a href="@Url.Action("Index", new { page = ViewBag.Page + 1 })"
+       class="btn btn-default">
+        Next &raquo;
+    </a>
+}
 </table>

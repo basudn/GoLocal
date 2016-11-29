@@ -85,7 +85,14 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+@if (Model.User.Email == User.Identity.Name || User.IsInRole("Admin"))
+{
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) <span>|</span>
+}
+@if (Request.IsAuthenticated)
+{
+    @Html.ActionLink("Comment", "Create", "Comments", new { feedId = Model.ID }, null) <span>|</span>
+}
     @Html.ActionLink("Back to List", "Index")
 </p>
 <table class="table">

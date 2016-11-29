@@ -243,7 +243,10 @@
     <Compile Include="Util\AddressComp.cs" />
     <Compile Include="Util\AddressTg.cs" />
     <Compile Include="Util\AppUtil.cs" />
+    <Compile Include="Util\CurrDetail.cs" />
+    <Compile Include="Util\DailyDetail.cs" />
     <Compile Include="Util\GMapResponse.cs" />
+    <Compile Include="Util\WeatherResponse.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="1.JPG" />
@@ -346,7 +349,6 @@
     <Content Include="Views\Votes\Create.cshtml" />
     <Content Include="Views\Votes\Delete.cshtml" />
     <Content Include="Views\Votes\Details.cshtml" />
-    <Content Include="Views\Votes\Edit.cshtml" />
     <Content Include="Views\Votes\Index.cshtml" />
     <Content Include="Views\Users\Create.cshtml" />
     <Content Include="Views\Feeds\Search.cshtml" />

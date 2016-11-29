@@ -271,7 +271,10 @@
     <Content Include="App_Data\CustomProps.properties" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="golocal.jpg" />
+    <Content Include="golocal1.jpg" />
     <Content Include="golocalsmall.png" />
+    <Content Include="imageedit_1_9797732960.png" />
+    <Content Include="imageedit_7_8567321352.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />

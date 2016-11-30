@@ -16,14 +16,19 @@ namespace GoLocal.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Comments
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int page = 0)
         {
             var commentList = db.CommentList.Include(c => c.Feed).Include(c => c.User);
             if (!User.IsInRole("Admin"))
             {
                 commentList = commentList.Where(c => c.Feed.Status == "A" && c.User.Email.ToLower() == User.Identity.Name.ToLower());
             }
-            return View(await commentList.ToListAsync());
+            int pageSize = 5;
+            int count = commentList.Count();
+            List<Comment> comments = await commentList.OrderByDescending(c => c.Timestamp).Skip(page * pageSize).Take(pageSize).ToListAsync();
+            this.ViewBag.MaxPage = (count / pageSize) - (count % pageSize == 0 ? 1 : 0);
+            this.ViewBag.Page = page;
+            return View(comments);
         }
 
         // GET: Comments/Details/5

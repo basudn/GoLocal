@@ -4,7 +4,7 @@
     ViewBag.Title = "View Comments";
 }
 <h4>View Comments</h4>
-<hr/>
+<hr />
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
@@ -54,4 +54,18 @@
         }
 
     </table>
+    if (ViewBag.Page > 0)
+    {
+        <a href="@Url.Action("Index", new { page = ViewBag.Page - 1 })"
+           class="btn btn-default">
+            &laquo; Prev
+        </a>
+    }
+    if (ViewBag.Page < ViewBag.MaxPage)
+    {
+        <a href="@Url.Action("Index", new { page = ViewBag.Page + 1 })"
+           class="btn btn-default">
+            Next &raquo;
+        </a>
+    }
 }

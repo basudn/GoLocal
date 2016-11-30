@@ -5,50 +5,74 @@
 }
 
 <h4>View Votes</h4>
-<hr/>
+<hr />
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-@if (Model.Count() > 0) { }
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Feed.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.User.Email)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Type)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Timestamp)
-        </th>
-        <th></th>
-    </tr>
+@if (Model.Count() > 0)
+{
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Feed.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Timestamp)
+            </th>
+            <th></th>
+        </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Feed.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.User.Email)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Type)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Timestamp)
-        </td>
-        <td>
-            @Html.ActionLink("Details", "Details", new { id=item.ID }) 
-            @if (item.User.Email == User.Identity.Name) {
-                <span>|</span> @Html.ActionLink("Delete", "Delete", new { id = item.ID })
-            }
-        </td>
-    </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Feed.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.Email)
+                </td>
+                <td>
+                    @if (item.Type == "U")
+                    {
+                        <span class="badge" style="background-color: #5cb85c;">&nbsp;</span>
+                    }
+                    else
+                    {
+                        <span class="badge" style="background-color: #d9534f;">&nbsp;</span>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Timestamp)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "Details", new { id = item.ID })
+                    @if (item.User.Email == User.Identity.Name)
+                    {
+                        <span>|</span> @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                    }
+                </td>
+            </tr>
+        }
 
-</table>
+    </table>
+    if (ViewBag.Page > 0)
+    {
+        <a href="@Url.Action("Index", new { page = ViewBag.Page - 1 })"
+           class="btn btn-default">
+            &laquo; Prev
+        </a>
+    }
+    if (ViewBag.Page < ViewBag.MaxPage)
+    {
+        <a href="@Url.Action("Index", new { page = ViewBag.Page + 1 })"
+           class="btn btn-default">
+            Next &raquo;
+        </a>
+    }
 }

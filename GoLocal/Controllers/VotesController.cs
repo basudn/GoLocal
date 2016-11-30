@@ -16,14 +16,19 @@ namespace GoLocal.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Votes
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int page = 0)
         {
             var voteList = db.VoteList.Include(v => v.Feed).Include(v => v.User);
             if (!User.IsInRole("Admin"))
             {
                 voteList = voteList.Where(v => v.User.Email.ToLower() == User.Identity.Name.ToLower());
             }
-            return View(await voteList.ToListAsync());
+            int pageSize = 5;
+            int count = voteList.Count();
+            List<Vote> votes = await voteList.OrderByDescending(v => v.Timestamp).Skip(page * pageSize).Take(pageSize).ToListAsync();
+            this.ViewBag.MaxPage = (count / pageSize) - (count % pageSize == 0 ? 1 : 0);
+            this.ViewBag.Page = page;
+            return View(votes);
         }
 
         // GET: Votes/Details/5

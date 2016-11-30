@@ -10,7 +10,7 @@ namespace GoLocal.Models
         [DataType(DataType.MultilineText)]
         public string Content { get; set; }
         [Required]
-        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy hh:mm tt}", ApplyFormatInEditMode = true)]
         public DateTime Timestamp { get; set; }
         [Display(Name = "User ID")]
         public virtual int UserID { get; set; }

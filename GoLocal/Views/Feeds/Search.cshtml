@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<GoLocal.Models.Feed>
 
 @{
-    ViewBag.Title = "Search";
+    ViewBag.Title = "Search Feed";
 }
-<h2>Search</h2>
-
+<h4>Search Feed</h4>
+<hr/>
 @using (Html.BeginForm("Search", "Feeds", FormMethod.Get))
 {
     @Html.AntiForgeryToken()

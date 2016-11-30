@@ -21,7 +21,7 @@ namespace GoLocal.Controllers
             var commentList = db.CommentList.Include(c => c.Feed).Include(c => c.User);
             if (!User.IsInRole("Admin"))
             {
-                commentList = commentList.Where(c => c.Feed.Status == "A");
+                commentList = commentList.Where(c => c.Feed.Status == "A" && c.User.Email.ToLower() == User.Identity.Name.ToLower());
             }
             return View(await commentList.ToListAsync());
         }

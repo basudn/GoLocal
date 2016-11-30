@@ -1,18 +1,15 @@
 ﻿@model GoLocal.Models.Feed
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Edit Feed";
 }
-
-<h2>Edit</h2>
-
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>Feed</h4>
+        <h4>Edit Feed</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.ID)

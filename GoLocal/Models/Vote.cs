@@ -16,7 +16,7 @@ namespace GoLocal.Models
         public virtual int FeedID { get; set; }
         public virtual Feed Feed { get; set; }
         [Required]
-        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy hh:mm tt}", ApplyFormatInEditMode = true)]
         public DateTime Timestamp { get; set; }
     }
 }

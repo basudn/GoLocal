@@ -1,13 +1,11 @@
 ﻿@model GoLocal.Models.Feed
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Feed Details";
 }
 
-<h2>Details</h2>
-
 <div>
-    <h4>Feed</h4>
+    <h4>Feed Details</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -91,14 +89,22 @@
 }
 @if (Request.IsAuthenticated)
 {
+    @Html.ActionLink("Upvote", "Upvote", "Votes", new { feedId = Model.ID}, null) <span>|</span>
     @Html.ActionLink("Comment", "Create", "Comments", new { feedId = Model.ID }, null) <span>|</span>
+    @Html.ActionLink("Downvote", "Downvote", "Votes", new { feedId = Model.ID }, null) <span>|</span>
 }
     @Html.ActionLink("Back to List", "Index")
 </p>
+
+@if (Model.FeedComments.Count > 0) {
+<h4>Comments</h4>
 <table class="table">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.FeedComments[0].Content)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FeedComments[0].User.Email)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.FeedComments[0].Timestamp)
@@ -113,14 +119,71 @@
                 @Html.DisplayFor(modelItem => item.Content)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.User.Email)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Timestamp)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
-                @Html.ActionLink("Details", "Details", new { id = item.ID }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                @Html.ActionLink("Details", "Details", new { id = item.ID })
+                @if (item.User.Email == User.Identity.Name || User.IsInRole("Admin"))
+                {
+                    <span>|</span> @Html.ActionLink("Edit", "Edit", new { id = item.ID }) <span>|</span>
+                    @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                }
             </td>
         </tr>
     }
 
 </table>
+}
+
+@if (Model.FeedVotes.Count > 0)
+{
+    <h4>Votes</h4>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FeedVotes[0].Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FeedVotes[0].User.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FeedVotes[0].Timestamp)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.FeedVotes)
+        {
+            <tr>
+                <td>
+                    @if (item.Type == "U")
+                    {
+                        <span class="badge" style="background-color: #5cb85c;">&nbsp;</span>
+                    }
+                    else
+                    {
+                        <span class="badge" style="background-color: #d9534f;">&nbsp;</span>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Timestamp)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "Details", new { id = item.ID })
+                    @if (item.User.Email == User.Identity.Name || User.IsInRole("Admin"))
+                    {
+                        <span>|</span> @Html.ActionLink("Edit", "Edit", new { id = item.ID }) <span>|</span>
+                        @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                    }
+                </td>
+            </tr>
+        }
+
+    </table>
+}

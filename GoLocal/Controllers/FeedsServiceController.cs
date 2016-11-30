@@ -27,7 +27,7 @@ namespace GoLocal.Controllers
             string api = apiKey.ElementAt(0);
             var feedList = db.FeedList.Include(f => f.User);
             string user = api.Split(new char[] { '-' })[1];
-            if (!Roles.GetRolesForUser(user).Contains("Admin"))
+            if (!User.IsInRole("Admin"))
             {
                 feedList = feedList.Where(f => f.Status == "A");
             }
@@ -42,7 +42,7 @@ namespace GoLocal.Controllers
             string api = apiKey.ElementAt(0);
             var feedList = db.FeedList.Include(f => f.User);
             string user = api.Split(new char[] { '-' })[1];
-            if (!Roles.GetRolesForUser(user).Contains("Admin"))
+            if (!User.IsInRole("Admin"))
             {
                 feedList = feedList.Where(f => f.Status == "A");
             }

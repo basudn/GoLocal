@@ -5,7 +5,7 @@
 }
 
 <h4>View Feeds</h4>
-<h4/>
+<hr/>
 <script>
     function mapData() {
         var latLong = document.getElementById('latLng').value;
@@ -58,8 +58,11 @@
                 <input type="submit" onclick="getLocation()" value="Current Location" class="btn btn-default" />
             </div>
             <div class="col-md-6" style="vertical-align:middle;">
-                Weather:<br />
-                @Html.Raw(ViewBag.weather)
+                @if (ViewBag.weather != null)
+                {
+                    <span>Weather:</span><br />
+                    @Html.Raw(ViewBag.weather);
+                }
             </div>
         </div>
     </div>
@@ -79,19 +82,10 @@
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Content)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Timestamp)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.LocationName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Lat)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Long)
             </th>
             <th></th>
         </tr>
@@ -106,19 +100,10 @@
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Content)
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => item.Timestamp)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.LocationName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Lat)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Long)
                 </td>
                 <td>
                     @Html.ActionLink("Details", "Details", new { id = item.ID })

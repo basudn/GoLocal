@@ -163,6 +163,7 @@ namespace GoLocal.Controllers
                     if (db.UserList.Where(u => u.Email.ToLower() == user.Email.ToLower()).Count() == 0)
                     {
                         Models.User newUser = new Models.User();
+                        newUser.RegDate = DateTime.Now;
                         newUser.Email = user.Email;
                         newUser.Status = "A";
                         db.UserList.Add(newUser);
@@ -170,6 +171,14 @@ namespace GoLocal.Controllers
                     }
                     if (User.IsInRole("Admin"))
                     {
+                        ApplicationDbContext context = new ApplicationDbContext();
+                        ApplicationUserManager mgr = new ApplicationUserManager(
+                        new Microsoft.AspNet.Identity.EntityFramework.UserStore<Models.ApplicationUser>(context));
+                        Models.ApplicationUser existingUser = context.Users.FirstOrDefault(x => x.UserName == user.Email);
+                        if (existingUser != null) Microsoft.AspNet.Identity.UserManagerExtensions.Delete(mgr, existingUser);
+                        Models.ApplicationUser au = new Models.ApplicationUser { Email = user.Email, UserName = user.Email };
+                        var idResult = mgr.CreateAsync(au, model.Password).Result;
+                        Microsoft.AspNet.Identity.UserManagerExtensions.AddToRoles(mgr, au.Id, "Admin");
                         Roles.AddUserToRole(user.Email, "Admin");
                     }
                     else

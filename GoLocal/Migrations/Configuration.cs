@@ -15,37 +15,15 @@ namespace GoLocal.Migrations
 
         protected override void Seed(GoLocal.Models.ApplicationDbContext context)
         {
+            context.Roles.AddOrUpdate(x => x.Name,
+            new Microsoft.AspNet.Identity.EntityFramework.IdentityRole { Id = Guid.NewGuid().ToString(), Name = "Admin" });
             ApplicationUserManager mgr = new ApplicationUserManager(
-
-    new Microsoft.AspNet.Identity.EntityFramework.UserStore<Models.ApplicationUser>(context));
-
+            new Microsoft.AspNet.Identity.EntityFramework.UserStore<Models.ApplicationUser>(context));
             Models.ApplicationUser existingUser = context.Users.FirstOrDefault(x => x.UserName == "admin@abc.com");
-
-            if (existingUser != null)
-
-            {
-
-                Microsoft.AspNet.Identity.UserManagerExtensions.Delete(mgr, existingUser);
-
-                Roles.RemoveUserFromRole(existingUser.Email, "Admin");
-
-            }
-
+            if (existingUser != null) Microsoft.AspNet.Identity.UserManagerExtensions.Delete(mgr, existingUser);
             Models.ApplicationUser au = new Models.ApplicationUser { Email = "admin@abc.com", UserName = "admin@abc.com" };
-
-            var result = mgr.CreateAsync(au, "Welcome@1").Result;
-
-            if (!Roles.RoleExists("Admin"))
-
-            {
-
-                Roles.CreateRole("Admin");
-
-            }
-
-
-
-            Roles.AddUserToRole("admin@abc.com", "Admin");
+            var idResult = mgr.CreateAsync(au, "Welcome@1").Result;
+            Microsoft.AspNet.Identity.UserManagerExtensions.AddToRoles(mgr, au.Id, "Admin");
         }
     }
 }

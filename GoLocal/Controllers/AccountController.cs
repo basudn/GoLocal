@@ -179,7 +179,6 @@ namespace GoLocal.Controllers
                         Models.ApplicationUser au = new Models.ApplicationUser { Email = user.Email, UserName = user.Email };
                         var idResult = mgr.CreateAsync(au, model.Password).Result;
                         Microsoft.AspNet.Identity.UserManagerExtensions.AddToRoles(mgr, au.Id, "Admin");
-                        Roles.AddUserToRole(user.Email, "Admin");
                     }
                     else
                     {

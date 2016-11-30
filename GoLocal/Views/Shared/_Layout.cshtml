@@ -21,14 +21,24 @@
     </script>
 </head>
 <body>
+    
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
+               
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
+                <a href="@Url.Action("Index", "Home")" class="navbar-brand">
+                    
+                    <img src="~/imageedit_7_8567321352.png" height="20">
+                       
+                    
+                    
+                </a>
+                
                 @Html.ActionLink("Go Local", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
@@ -41,18 +51,26 @@
                     <li>@Html.ActionLink("Twitter", "ComingSoon", "Home")</li>
                     <li>@Html.ActionLink("Local Map", "ComingSoon", "Home")</li>
                     <li>@Html.ActionLink("Jobs", "Contact", "Home")</li>
+                    <img src="~/imageedit_7_8567321352.png">
+                        
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
         </div>
     </div>
+    <ol class="breadcrumb">
+        <li>@Html.ActionLink(ViewContext.RouteData.Values["controller"].ToString(), "index", "ViewContext.RouteData.Values[\"controller\"].ToString()", new { })</li>
+        <li><a href="#">@Html.Label(ViewContext.RouteData.Values["action"].ToString(), ViewContext.RouteData.Values["action"].ToString(), ViewContext.RouteData.Values["action"].ToString())</a></li>
+    </ol>
     <div class="container body-content">
         @RenderBody()
         <hr />
+        <center><img src="~/imageedit_1_9797732960.png" title="title" alt="additional title" /></center>
         <footer>
             <p>&copy; @DateTime.Now.Year - Debayan Basu, Sushant Karnik, Vijay Jain</p>
         </footer>
     </div>
+
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
